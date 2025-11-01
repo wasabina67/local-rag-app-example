@@ -34,3 +34,7 @@ uv run black .
 ```bash
 uv run python main.py
 ```
+
+```bash
+uv run streamlit run rag_app.py
+```
