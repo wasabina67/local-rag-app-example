@@ -17,3 +17,15 @@ dev = [
     "black>=25.9.0",
     "ruff>=0.14.3",
 ]
+
+[tool.black]
+line-length = 120
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["local-rag-app-example"]

@@ -3,12 +3,12 @@ from typing import List
 
 import streamlit as st
 from llama_index.core import (
+    Document,
     Settings,
     SimpleDirectoryReader,
     StorageContext,
-    Document,
-    load_index_from_storage,  # type: ignore
     VectorStoreIndex,
+    load_index_from_storage,  # type: ignore
 )
 from llama_index.embeddings.ollama import OllamaEmbedding  # type: ignore
 from llama_index.llms.ollama import Ollama  # type: ignore
@@ -46,9 +46,7 @@ def create_or_load_index(documents: List[Document], embed_model: OllamaEmbedding
         )
         os.makedirs(INDEX_DIR, exist_ok=True)
         index.storage_context.persist(persist_dir=INDEX_DIR)  # type: ignore
-        st.success(
-            f"{len(documents)} 個のドキュメントから新しいインデックスを作成しました。"
-        )
+        st.success(f"{len(documents)} 個のドキュメントから新しいインデックスを作成しました。")
         return index
     except Exception as e:
         st.error(e)
@@ -92,9 +90,7 @@ def load_documents() -> List[Document]:
 
 def initialize_chat_history():
     if "messages" not in st.session_state:
-        st.session_state.messages = [
-            {"role": "assistant", "content": "何か気になることはありますか？"}
-        ]
+        st.session_state.messages = [{"role": "assistant", "content": "何か気になることはありますか？"}]
 
 
 def main():
@@ -117,9 +113,7 @@ def main():
         index = create_or_load_index(documents, embed_model)
 
     if index is None:
-        st.error(
-            "インデックスが利用できません。ドキュメントを追加して再度お試しください。"
-        )
+        st.error("インデックスが利用できません。ドキュメントを追加して再度お試しください。")
         return
 
     query_engine = index.as_query_engine(llm=llm)  # type: ignore
@@ -137,16 +131,12 @@ def main():
 
         with st.chat_message("assistant"):
             with st.spinner("考えています..."):
-                query_with_instruction = (
-                    f"{prompt}\nこの質問に日本語で回答してください。"
-                )
+                query_with_instruction = f"{prompt}\nこの質問に日本語で回答してください。"
                 response = query_engine.query(query_with_instruction)
                 response_text = str(response)
                 st.write(response_text)
 
-        st.session_state.messages.append(
-            {"role": "assistant", "content": response_text}
-        )
+        st.session_state.messages.append({"role": "assistant", "content": response_text})
 
 
 if __name__ == "__main__":
