@@ -46,7 +46,9 @@ def create_or_load_index(documents: List[Document], embed_model: OllamaEmbedding
         )
         os.makedirs(INDEX_DIR, exist_ok=True)
         index.storage_context.persist(persist_dir=INDEX_DIR)  # type: ignore
-        st.success(f"{len(documents)} 個のドキュメントから新しいインデックスを作成しました。")
+        st.success(
+            f"{len(documents)} 個のドキュメントから新しいインデックスを作成しました。"
+        )
         return index
     except Exception as e:
         st.error(e)
@@ -74,7 +76,7 @@ def setup_ollama_models():
 def load_documents() -> List[Document]:
     if not os.path.exists(DATA_DIR):
         os.makedirs(DATA_DIR, exist_ok=True)
-        st.warning("'{DATA_DIR}' を新規作成しました。")
+        st.warning(f"{DATA_DIR} を新規作成しました。")
         return []
 
     try:
@@ -95,7 +97,7 @@ def initialize_chat_history():
 def main():
     st.set_page_config(
         page_title="Local rag app",
-        page_icon="💬",
+        page_icon=None,
         layout="wide",
     )
     st.title("Local rag app")
@@ -110,6 +112,34 @@ def main():
 
     with st.spinner("インデックスを準備しています..."):
         index = create_or_load_index(documents, embed_model)
+
+    if index is None:
+        st.error("インデックスが利用できません。ドキュメントを追加して再度お試しください。")
+        return
+
+    query_engine = index.as_query_engine(llm=llm)  # type: ignore
+
+    st.write("---")
+
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.write(message["content"])
+
+    if prompt := st.chat_input("質問を入力してください"):
+        with st.chat_message("user"):
+            st.write(prompt)
+        st.session_state.messages.append({"role": "user", "content": prompt})
+
+        with st.chat_message("assistant"):
+            with st.spinner("考えています..."):
+                query_with_instruction = f"{prompt}\nこの質問に日本語で回答してください。"
+                response = query_engine.query(query_with_instruction)
+                response_text = str(response)
+                st.write(response_text)
+
+        st.session_state.messages.append(
+            {"role": "assistant", "content": response_text}
+        )
 
 
 if __name__ == "__main__":
