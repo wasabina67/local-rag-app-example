@@ -42,3 +42,17 @@ uv run python check_embedding.py
 ```bash
 uv run streamlit run rag_app.py
 ```
+
+## Question
+
+```
+ChromaDBのセットアップをしたのはいつだっけ?
+```
+
+```
+パフォーマンス最適化のためにしたことは?
+```
+
+```
+テストカバレッジはどのように改善されましたか?
+```
