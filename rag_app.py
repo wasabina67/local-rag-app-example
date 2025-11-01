@@ -80,7 +80,10 @@ def load_documents() -> List[Document]:
         return []
 
     try:
-        documents = SimpleDirectoryReader(DATA_DIR).load_data()
+        documents = SimpleDirectoryReader(
+            DATA_DIR,
+            required_exts=[".txt", ".md", ".pdf"],
+        ).load_data()
         return documents
     except Exception as e:
         st.error(e)
