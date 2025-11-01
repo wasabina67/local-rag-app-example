@@ -15,7 +15,7 @@ from llama_index.llms.ollama import Ollama  # type: ignore
 
 # Index, Data paths
 INDEX_DIR = "./index"
-DATA_DIR = "./data"
+DATA_DIR = "./data/logs"
 
 # Ollama model configuration
 LLM_MODEL = "gpt-oss:20b"
