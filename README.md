@@ -15,6 +15,12 @@ uv add openai
 uv add --dev ruff black
 ```
 
+### Install dependencies
+
+```bash
+uv sync
+```
+
 ## Run
 
 ```bash
@@ -23,4 +29,8 @@ uv run ruff check .
 
 ```bash
 uv run black .
+```
+
+```bash
+uv run python main.py
 ```
