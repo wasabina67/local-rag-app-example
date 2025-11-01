@@ -36,5 +36,9 @@ uv run python main.py
 ```
 
 ```bash
+uv run python check_embedding.py
+```
+
+```bash
 uv run streamlit run rag_app.py
 ```
