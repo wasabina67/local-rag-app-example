@@ -114,7 +114,9 @@ def main():
         index = create_or_load_index(documents, embed_model)
 
     if index is None:
-        st.error("インデックスが利用できません。ドキュメントを追加して再度お試しください。")
+        st.error(
+            "インデックスが利用できません。ドキュメントを追加して再度お試しください。"
+        )
         return
 
     query_engine = index.as_query_engine(llm=llm)  # type: ignore
@@ -132,7 +134,9 @@ def main():
 
         with st.chat_message("assistant"):
             with st.spinner("考えています..."):
-                query_with_instruction = f"{prompt}\nこの質問に日本語で回答してください。"
+                query_with_instruction = (
+                    f"{prompt}\nこの質問に日本語で回答してください。"
+                )
                 response = query_engine.query(query_with_instruction)
                 response_text = str(response)
                 st.write(response_text)
